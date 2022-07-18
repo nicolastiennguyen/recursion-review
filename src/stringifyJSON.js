@@ -42,14 +42,26 @@ var stringifyJSON = function(obj) {
     if (Object.keys(obj).length === 0) {
       return '{}';
     }
-    var temp  = {};
-    for (var key in obj) {
-      var stringKey = stringifyJSON(key);
-      temp[stringKey] = stringifyJSON(obj[key]);
+    var tempObj = '{';
+    var keys = Object.keys(obj);
+    for (var i = 0; i < keys.length; i++) {
+      // if key or value is undefined skip
+      if (keys[i] === 'undefined'
+        || obj[keys[i]] === undefined
+        || typeof keys[i] === 'function'
+        || typeof obj[keys[i]] === 'function') {
+          continue;
+        }
+      tempObj += stringifyJSON(keys[i]);
+      tempObj += ':';
+      tempObj += stringifyJSON(obj[keys[i]]);
+      // if not last key, add comma
+      if (i !== keys.length - 1) {
+        tempObj += ',';
+      }
     }
-    return temp;
-
+    tempObj += '}';
+    return tempObj;
   }
-
 
 };
